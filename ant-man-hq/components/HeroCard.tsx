@@ -4,6 +4,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import type { Player, SeasonAverage } from "@/lib/types";
+import confetti from "canvas-confetti";
 
 type Props = {
   player: Player | null;
@@ -20,6 +21,12 @@ export function HeroCard({ player, seasonAverages, onFirstFlip }: Props) {
     if (!hasFlipped) {
       setHasFlipped(true);
       onFirstFlip?.();
+      confetti({
+        particleCount: 120,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#0C2340", "#236192", "#78BE20", "#9EA2A2"],
+      });
     }
   }
 
