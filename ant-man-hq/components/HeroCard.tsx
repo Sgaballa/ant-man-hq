@@ -52,32 +52,27 @@ export function HeroCard({ player, seasonAverages, onFirstFlip }: Props) {
           className="absolute inset-0 rounded-2xl neon-border overflow-hidden bg-gradient-to-b from-[color:var(--color-wolves-lake)] to-[color:var(--color-wolves-navy)]"
           style={{ backfaceVisibility: "hidden" }}
         >
-          {/* Player photo — JPEG with near-white background; `mix-blend-mode: multiply`
-              hides the white and keeps the subject visible over the navy gradient. */}
+          {/* Player photo with transparent background. No blend mode, no overlay tint. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/ant-hero.png"
             alt="Anthony Edwards"
             className="absolute inset-0 w-full h-full object-contain object-bottom pointer-events-none"
-            style={{ mixBlendMode: "multiply" }}
           />
-          {/* Subtle dark gradient at top + bottom so the text overlays stay legible */}
-          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[color:var(--color-wolves-navy)]/80 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[color:var(--color-wolves-navy)] to-transparent" />
 
-          {/* Foreground content */}
+          {/* Foreground content — text uses shadow for legibility over any part of the photo */}
           <div className="relative h-full p-5 flex flex-col justify-between">
             <div className="flex justify-between items-start">
-              <span className="font-[family-name:var(--font-display)] text-6xl text-[color:var(--color-wolves-aurora)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+              <span className="font-[family-name:var(--font-display)] text-6xl text-[color:var(--color-wolves-aurora)] drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
                 #{number}
               </span>
-              <span className="text-xs text-[color:var(--color-wolves-moonlight)] tracking-widest">TIMBERWOLVES</span>
+              <span className="text-xs text-[color:var(--color-wolves-moonlight)] tracking-widest drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">TIMBERWOLVES</span>
             </div>
             <div>
-              <p className="font-[family-name:var(--font-display)] text-4xl leading-none tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+              <p className="font-[family-name:var(--font-display)] text-4xl leading-none tracking-wide drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
                 {name}
               </p>
-              <p className="mt-2 text-sm text-[color:var(--color-wolves-moonlight)]">
+              <p className="mt-2 text-sm text-[color:var(--color-wolves-moonlight)] drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
                 {player?.position ?? "G"} · {player?.height ?? "6-4"} · Tap to flip
               </p>
             </div>
