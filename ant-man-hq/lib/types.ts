@@ -55,6 +55,14 @@ export type SeasonAverage = {
   dreb: number;
 };
 
+export type Highlight = {
+  id: string;             // synthetic id: ESPN video id or URL
+  headline: string;
+  videoUrl: string;       // direct MP4
+  thumbnail: string | null;
+  gameId: string;
+};
+
 // Envelope used by our own API routes
 export type ApiResponse<T> =
   | { ok: true; data: T }

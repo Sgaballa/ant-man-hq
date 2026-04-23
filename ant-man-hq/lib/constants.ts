@@ -11,11 +11,3 @@ export const WOLVES_PALETTE = {
   moonlight: "#9EA2A2",
 } as const;
 
-export const CURATED_HIGHLIGHTS: ReadonlyArray<{
-  title: string;
-  youtubeId: string;
-}> = [
-  { title: "Ant's Poster Dunks — Career So Far", youtubeId: "iNK7KOq3bvU" },
-  { title: "Top Plays: Ant vs. Nuggets (2024 Playoffs)", youtubeId: "Eg4VAbmYqBk" },
-  { title: "50-Point Game Highlights", youtubeId: "LrwTPw8WMGY" },
-];

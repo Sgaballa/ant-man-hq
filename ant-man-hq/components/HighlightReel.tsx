@@ -1,24 +1,36 @@
-import { CURATED_HIGHLIGHTS } from "@/lib/constants";
+import type { Highlight } from "@/lib/types";
 
-export function HighlightReel() {
+type Props = { highlights: Highlight[] };
+
+export function HighlightReel({ highlights }: Props) {
+  if (highlights.length === 0) {
+    return (
+      <section className="px-6 py-6">
+        <h2 className="font-[family-name:var(--font-display)] text-2xl text-[color:var(--color-wolves-aurora)] mb-4">
+          HIGHLIGHT REEL
+        </h2>
+        <p className="text-[color:var(--color-wolves-moonlight)]">No highlights yet — check back after the next game.</p>
+      </section>
+    );
+  }
+
   return (
     <section className="px-6 py-6">
       <h2 className="font-[family-name:var(--font-display)] text-2xl text-[color:var(--color-wolves-aurora)] mb-4">
         HIGHLIGHT REEL
       </h2>
       <div className="grid gap-4 md:grid-cols-3">
-        {CURATED_HIGHLIGHTS.map((h) => (
-          <div key={h.youtubeId} className="rounded-xl overflow-hidden neon-border">
-            <div className="aspect-video bg-black">
-              <iframe
-                className="w-full h-full"
-                src={`https://www.youtube-nocookie.com/embed/${h.youtubeId}`}
-                title={h.title}
-                allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-            <p className="p-3 text-sm">{h.title}</p>
+        {highlights.map((h) => (
+          <div key={h.id} className="rounded-xl overflow-hidden neon-border">
+            <video
+              className="w-full aspect-video bg-black"
+              src={h.videoUrl}
+              poster={h.thumbnail ?? undefined}
+              controls
+              preload="metadata"
+              playsInline
+            />
+            <p className="p-3 text-sm">{h.headline}</p>
           </div>
         ))}
       </div>
