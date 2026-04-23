@@ -7,7 +7,7 @@ describe("espn client", () => {
   });
 
   it("parses JSON on success", async () => {
-    const fetchMock = vi.fn(async () =>
+    const fetchMock = vi.fn(async (_url: string) =>
       new Response(JSON.stringify({ athlete: { id: "4594268" } }), { status: 200 })
     );
     vi.stubGlobal("fetch", fetchMock);
