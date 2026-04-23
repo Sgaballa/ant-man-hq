@@ -15,7 +15,7 @@ export const CURATED_HIGHLIGHTS: ReadonlyArray<{
   title: string;
   youtubeId: string;
 }> = [
-  { title: "Ant's Poster Dunks — Career So Far", youtubeId: "REPLACE_WITH_REAL_ID" },
-  { title: "Top Plays: Ant vs. Nuggets (2024 Playoffs)", youtubeId: "REPLACE_WITH_REAL_ID" },
-  { title: "50-Point Game Highlights", youtubeId: "REPLACE_WITH_REAL_ID" },
+  { title: "Ant's Poster Dunks — Career So Far", youtubeId: "iNK7KOq3bvU" },
+  { title: "Top Plays: Ant vs. Nuggets (2024 Playoffs)", youtubeId: "Eg4VAbmYqBk" },
+  { title: "50-Point Game Highlights", youtubeId: "LrwTPw8WMGY" },
 ];
