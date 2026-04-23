@@ -107,6 +107,35 @@ describe("GET /api/games", () => {
     expect(body.data.liveToday?.time).toBe("5:32");
   });
 
+  it("treats a today-dated scheduled game as upcoming, not live", async () => {
+    const schedule = {
+      team: { id: "16", abbreviation: "MIN" },
+      events: [
+        scheduleEvent({ id: "10", date: "2026-04-23", datetimeUtc: "2026-04-24T01:30Z", status: "Scheduled", completed: false, period: 0, homeAbbr: "MIN", homeScore: 0, visitorAbbr: "DEN", visitorScore: 0 }),
+      ],
+    };
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => {
+        if (url.includes("/teams/min/schedule")) {
+          return new Response(JSON.stringify(schedule), { status: 200 });
+        }
+        if (url.includes("/scoreboard")) {
+          return new Response(JSON.stringify({ events: [schedule.events[0]] }), { status: 200 });
+        }
+        throw new Error(`Unexpected URL: ${url}`);
+      })
+    );
+
+    const res = await GET();
+    const body = await res.json();
+
+    expect(body.ok).toBe(true);
+    expect(body.data.liveToday).toBeNull();
+    expect(body.data.upcoming[0].id).toBe("10");
+  });
+
   it("handles ESPN's object-form score { value, displayValue }", async () => {
     const ev = scheduleEvent({ id: "99", date: "2026-04-20", datetimeUtc: "2026-04-21T01:00Z", status: "Final", completed: true, period: 4, homeAbbr: "MIN", homeScore: 0, visitorAbbr: "DEN", visitorScore: 0 });
     // Overwrite scores with ESPN's real shape
