@@ -30,10 +30,16 @@ type EspnStatus = {
   type?: EspnStatusType;
 };
 
+type EspnCompetitionType = {
+  text?: string;
+  abbreviation?: string;
+};
+
 type EspnCompetition = {
   id?: string;
   date?: string;
   status?: EspnStatus;
+  type?: EspnCompetitionType;
   competitors?: EspnCompetitor[];
 };
 
@@ -84,6 +90,7 @@ export function transformEvent(ev: EspnEvent): Game | null {
     period: comp.status?.period ?? 0,
     time: comp.status?.displayClock ?? null,
     postseason: ev.seasonType?.type === 3,
+    gameType: comp.type?.text ?? null,
     home_team: teamFrom(home),
     visitor_team: teamFrom(visitor),
     home_team_score: scoreFrom(home),

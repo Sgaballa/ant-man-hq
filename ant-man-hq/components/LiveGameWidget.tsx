@@ -20,10 +20,22 @@ export function LiveGameWidget({ liveToday, upcoming }: Props) {
   );
 }
 
+function gameContext(game: Game): string {
+  if (game.postseason) {
+    return game.gameType ? `PLAYOFFS · ${game.gameType.toUpperCase()}` : "PLAYOFFS";
+  }
+  return "REGULAR SEASON";
+}
+
 function LiveScoreboard({ game }: { game: Game }) {
   return (
     <section className="px-6 py-6">
-      <p className="text-xs text-red-400 uppercase tracking-widest">● Live</p>
+      <div className="flex items-center gap-3">
+        <p className="text-xs text-red-400 uppercase tracking-widest">● Live</p>
+        <p className="text-xs uppercase tracking-widest text-[color:var(--color-wolves-moonlight)]">
+          {gameContext(game)}
+        </p>
+      </div>
       <div className="mt-2 rounded-xl neon-border bg-[color:var(--color-wolves-navy)] p-4 flex items-center justify-between">
         <TeamScore name={game.visitor_team.abbreviation} score={game.visitor_team_score} highlight={game.visitor_team.id === TIMBERWOLVES_TEAM_ID} />
         <div className="text-center">
@@ -67,7 +79,12 @@ function NextGameCountdown({ game }: { game: Game }) {
 
   return (
     <section className="px-6 py-6">
-      <p className="text-xs uppercase tracking-widest text-[color:var(--color-wolves-aurora)]">Next Game</p>
+      <div className="flex items-center gap-3">
+        <p className="text-xs uppercase tracking-widest text-[color:var(--color-wolves-aurora)]">Next Game</p>
+        <p className="text-xs uppercase tracking-widest text-[color:var(--color-wolves-moonlight)]">
+          {gameContext(game)}
+        </p>
+      </div>
       <div className="mt-2 rounded-xl neon-border bg-[color:var(--color-wolves-navy)] p-4 text-center">
         <p className="font-[family-name:var(--font-display)] text-3xl">
           Wolves {homeAway} {opponent.abbreviation}

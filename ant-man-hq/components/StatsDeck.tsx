@@ -10,7 +10,6 @@ export function StatsDeck({ seasonAverages }: Props) {
     { label: "APG", value: seasonAverages?.ast.toFixed(1) ?? null, back: `TO: ${seasonAverages?.turnover.toFixed(1) ?? "—"}` },
     { label: "FG%", value: seasonAverages ? pct(seasonAverages.fg_pct) : null, back: seasonAverages ? `${seasonAverages.fg_made.toFixed(1)}/${seasonAverages.fg_attempted.toFixed(1)}` : null },
     { label: "3P%", value: seasonAverages ? pct(seasonAverages.fg3_pct) : null, back: seasonAverages ? `${seasonAverages.fg3_made.toFixed(1)}/${seasonAverages.fg3_attempted.toFixed(1)}` : null },
-    { label: "STL", value: seasonAverages?.stl.toFixed(1) ?? null, back: `BLK: ${seasonAverages?.blk.toFixed(1) ?? "—"}` },
   ];
 
   return (

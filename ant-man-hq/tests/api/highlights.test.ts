@@ -39,7 +39,7 @@ function summaryWithVideos(n: number, gameId: string) {
       headline: `Clip ${i} from game ${gameId}`,
       thumbnail: `https://cdn.example/thumb-${gameId}-${i}.jpg`,
       links: {
-        source: { href: `https://cdn.example/video-${gameId}-${i}.mp4` },
+        web: { href: `https://www.espn.com/video/clip?id=${gameId}-v${i}` },
       },
     })),
   };
@@ -89,7 +89,7 @@ describe("GET /api/highlights", () => {
     expect(gameIds.has("E")).toBe(false);
 
     const first = body.data.highlights[0];
-    expect(first.videoUrl).toMatch(/video-C-\d\.mp4$/);
+    expect(first.clipUrl).toMatch(/espn\.com\/video\/clip\?id=C-v\d$/);
     expect(first.thumbnail).toMatch(/thumb-C-\d\.jpg$/);
     expect(first.headline).toMatch(/Clip \d from game C/);
   });

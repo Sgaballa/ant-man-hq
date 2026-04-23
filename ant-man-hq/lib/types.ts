@@ -30,6 +30,7 @@ export type Game = {
   period: number;         // 0 = not started
   time: string | null;    // clock, e.g. "5:32"
   postseason: boolean;
+  gameType: string | null; // "Round of 16", "Conference Finals", null for regular season
   home_team: Team;
   visitor_team: Team;
   home_team_score: number;
@@ -56,9 +57,9 @@ export type SeasonAverage = {
 };
 
 export type Highlight = {
-  id: string;             // synthetic id: ESPN video id or URL
+  id: string;
   headline: string;
-  videoUrl: string;       // direct MP4
+  clipUrl: string;        // ESPN clip page URL — opens native player
   thumbnail: string | null;
   gameId: string;
 };
