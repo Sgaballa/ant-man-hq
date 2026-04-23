@@ -13,7 +13,7 @@ export function StatsDeck({ seasonAverages }: Props) {
   ];
 
   return (
-    <section className="px-6 py-8">
+    <section className="px-4 sm:px-6 py-6 sm:py-8">
       <h2 className="font-[family-name:var(--font-display)] text-2xl text-[color:var(--color-wolves-aurora)] mb-4">
         SEASON STATS
       </h2>

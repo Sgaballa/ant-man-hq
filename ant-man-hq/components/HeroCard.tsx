@@ -35,7 +35,7 @@ export function HeroCard({ player, seasonAverages, onFirstFlip }: Props) {
 
   return (
     <div
-      className="relative mx-auto my-10 w-[300px] h-[440px] cursor-pointer"
+      className="relative mx-auto my-8 w-[min(85vw,300px)] aspect-[3/4.4] cursor-pointer"
       style={{ perspective: "1200px" }}
       onClick={toggle}
       role="button"
@@ -49,28 +49,44 @@ export function HeroCard({ player, seasonAverages, onFirstFlip }: Props) {
       >
         {/* Front */}
         <div
-          className="absolute inset-0 rounded-2xl neon-border bg-gradient-to-b from-[color:var(--color-wolves-lake)] to-[color:var(--color-wolves-navy)] p-6 flex flex-col justify-between"
+          className="absolute inset-0 rounded-2xl neon-border overflow-hidden bg-gradient-to-b from-[color:var(--color-wolves-lake)] to-[color:var(--color-wolves-navy)]"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <div className="flex justify-between items-start">
-            <span className="font-[family-name:var(--font-display)] text-6xl text-[color:var(--color-wolves-aurora)]">
-              #{number}
-            </span>
-            <span className="text-xs text-[color:var(--color-wolves-moonlight)]">TIMBERWOLVES</span>
-          </div>
-          <div>
-            <p className="font-[family-name:var(--font-display)] text-4xl leading-none tracking-wide">
-              {name}
-            </p>
-            <p className="mt-2 text-sm text-[color:var(--color-wolves-moonlight)]">
-              {player?.position ?? "G"} · {player?.height ?? "6-4"} · Tap to flip
-            </p>
+          {/* Player photo — JPEG with near-white background; `mix-blend-mode: multiply`
+              hides the white and keeps the subject visible over the navy gradient. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/ant-hero.png"
+            alt="Anthony Edwards"
+            className="absolute inset-0 w-full h-full object-contain object-bottom pointer-events-none"
+            style={{ mixBlendMode: "multiply" }}
+          />
+          {/* Subtle dark gradient at top + bottom so the text overlays stay legible */}
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[color:var(--color-wolves-navy)]/80 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[color:var(--color-wolves-navy)] to-transparent" />
+
+          {/* Foreground content */}
+          <div className="relative h-full p-5 flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+              <span className="font-[family-name:var(--font-display)] text-6xl text-[color:var(--color-wolves-aurora)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+                #{number}
+              </span>
+              <span className="text-xs text-[color:var(--color-wolves-moonlight)] tracking-widest">TIMBERWOLVES</span>
+            </div>
+            <div>
+              <p className="font-[family-name:var(--font-display)] text-4xl leading-none tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                {name}
+              </p>
+              <p className="mt-2 text-sm text-[color:var(--color-wolves-moonlight)]">
+                {player?.position ?? "G"} · {player?.height ?? "6-4"} · Tap to flip
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Back */}
         <div
-          className="absolute inset-0 rounded-2xl neon-border bg-[color:var(--color-wolves-navy)] p-6 flex flex-col"
+          className="absolute inset-0 rounded-2xl neon-border bg-[color:var(--color-wolves-navy)] p-5 flex flex-col"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <p className="font-[family-name:var(--font-display)] text-2xl text-[color:var(--color-wolves-aurora)]">

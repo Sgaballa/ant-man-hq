@@ -6,7 +6,7 @@ type Props = { games: Game[] };
 export function ScheduleCarousel({ games }: Props) {
   if (games.length === 0) {
     return (
-      <section className="px-6 py-6">
+      <section className="px-4 sm:px-6 py-6">
         <h2 className="font-[family-name:var(--font-display)] text-2xl text-[color:var(--color-wolves-aurora)] mb-2">UP NEXT</h2>
         <p className="text-[color:var(--color-wolves-moonlight)]">No upcoming games.</p>
       </section>
@@ -14,7 +14,7 @@ export function ScheduleCarousel({ games }: Props) {
   }
 
   return (
-    <section className="px-6 py-6">
+    <section className="px-4 sm:px-6 py-6">
       <h2 className="font-[family-name:var(--font-display)] text-2xl text-[color:var(--color-wolves-aurora)] mb-4">
         UP NEXT
       </h2>

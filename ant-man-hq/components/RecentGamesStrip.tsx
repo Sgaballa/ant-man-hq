@@ -6,7 +6,7 @@ type Props = { games: Game[] };
 export function RecentGamesStrip({ games }: Props) {
   if (games.length === 0) {
     return (
-      <section className="px-6 py-6 text-[color:var(--color-wolves-moonlight)]">
+      <section className="px-4 sm:px-6 py-6 text-[color:var(--color-wolves-moonlight)]">
         <h2 className="font-[family-name:var(--font-display)] text-2xl text-[color:var(--color-wolves-aurora)] mb-2">RECENT GAMES</h2>
         <p>No games yet.</p>
       </section>
@@ -14,7 +14,7 @@ export function RecentGamesStrip({ games }: Props) {
   }
 
   return (
-    <section className="px-6 py-6">
+    <section className="px-4 sm:px-6 py-6">
       <h2 className="font-[family-name:var(--font-display)] text-2xl text-[color:var(--color-wolves-aurora)] mb-4">
         RECENT GAMES
       </h2>

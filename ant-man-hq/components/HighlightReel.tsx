@@ -5,7 +5,7 @@ type Props = { highlights: Highlight[] };
 export function HighlightReel({ highlights }: Props) {
   if (highlights.length === 0) {
     return (
-      <section className="px-6 py-6">
+      <section className="px-4 sm:px-6 py-6">
         <h2 className="font-[family-name:var(--font-display)] text-2xl text-[color:var(--color-wolves-aurora)] mb-4">
           HIGHLIGHT REEL
         </h2>
@@ -17,7 +17,7 @@ export function HighlightReel({ highlights }: Props) {
   }
 
   return (
-    <section className="px-6 py-6">
+    <section className="px-4 sm:px-6 py-6">
       <h2 className="font-[family-name:var(--font-display)] text-2xl text-[color:var(--color-wolves-aurora)] mb-4">
         HIGHLIGHT REEL
       </h2>
