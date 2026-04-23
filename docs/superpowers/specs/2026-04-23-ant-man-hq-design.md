@@ -23,7 +23,7 @@ Success = he opens it every game day to check Ant's latest line and the Wolves' 
 |---|---|---|
 | Project type | Fan site + stats dashboard combo | User explicitly picked this over trivia/mini-game combo |
 | Theme | Anthony Edwards + Minnesota Timberwolves | Recipient's favorite player + team |
-| Data source | balldontlie.io (free, no key required) | Free NBA stats API, covers players/teams/games/season averages |
+| Data source | **ESPN hidden API** (no auth) | Originally selected ESPN's site APIs (pivoted from balldontlie.io); pivoted to ESPN during Task 6 because balldontlie's free tier excludes `/stats` and `/season_averages` endpoints required for the stats deck. ESPN's site APIs (undocumented but stable for years) provide athlete bio, season averages, team schedule, and live scoreboard with no auth and no per-minute rate limit. Trade-off: undocumented endpoints could change without notice. |
 | Hosting | Vercel (free tier) | Native Next.js deployment, free, bookmarkable URL |
 | Visual direction | Trading-card / arcade | Playful, game-like UI with card-flip animations; fits 11-year-old audience |
 
@@ -33,7 +33,7 @@ Success = he opens it every game day to check Ant's latest line and the Wolves' 
 - **Styling:** Tailwind CSS
 - **Animations:** Framer Motion (card flips, neon glow, confetti)
 - **Fonts:** Bebas Neue (display / titles), Inter (body)
-- **Data:** balldontlie.io v1 REST API, proxied through Next.js API routes
+- **Data:** ESPN hidden site APIs, proxied through Next.js API routes. Endpoints in use: `site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/{id}` (bio), `athletes/{id}/stats` (season averages), `site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/{abbr}/schedule` (schedule), `scoreboard?dates=YYYYMMDD` (live/daily)
 - **Deployment:** Vercel with GitHub auto-deploy
 
 ## Visual Theme
@@ -81,7 +81,7 @@ Next 5 Wolves games as mini matchup cards (opponent logo, date, time, home/away 
 Hand-curated YouTube embeds of Ant's signature dunks / moments. URL list lives in `lib/constants.ts` — not API-driven, easy to update.
 
 ### 8. Footer
-Team colors band, "Built for [recipient] — Wolves fan for life" tagline, link to balldontlie.io attribution.
+Team colors band, "Built for [recipient] — Wolves fan for life" tagline, link to ESPN's site APIs (pivoted from balldontlie.io) attribution.
 
 ## File Structure
 
@@ -117,7 +117,7 @@ public/
 Browser (component)
   → fetch('/api/player' | '/api/games')
     → Next.js route handler
-      → balldontlie.io REST
+      → ESPN's site APIs (pivoted from balldontlie.io) REST
       → shape + cache (ISR, Next.js fetch revalidate)
     ← JSON { ok: true, data: ... }
   ← render

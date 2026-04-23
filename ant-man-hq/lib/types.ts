@@ -1,39 +1,34 @@
 // lib/types.ts
 
 export type Team = {
-  id: number;
-  abbreviation: string;
-  city: string;
-  conference: string;
-  division: string;
-  full_name: string;
-  name: string;
+  id: string;             // ESPN team id as string, e.g. "16" for Wolves
+  abbreviation: string;   // "MIN"
+  displayName: string;    // "Minnesota Timberwolves"
+  shortName: string;      // "Timberwolves"
+  logo: string;           // URL
 };
 
 export type Player = {
-  id: number;
+  id: string;             // ESPN athlete id as string
   first_name: string;
   last_name: string;
   position: string;
-  height: string | null;
-  weight: string | null;
+  height: string | null;  // formatted, e.g. "6' 4\""
+  weight: string | null;  // formatted, e.g. "225 lbs"
   jersey_number: string | null;
   college: string | null;
-  country: string | null;
-  draft_year: number | null;
-  draft_round: number | null;
-  draft_number: number | null;
+  debut_year: number | null;
   team: Team;
+  headshot: string | null; // URL
 };
 
 export type Game = {
-  id: number;
-  date: string;          // "YYYY-MM-DD"
+  id: string;
+  date: string;           // "YYYY-MM-DD"
   datetime: string | null; // ISO
-  season: number;
-  status: string;        // "Final", "1st Qtr", etc.
-  period: number;
-  time: string | null;
+  status: string;         // "Final", "2nd Qtr", "Scheduled", etc.
+  period: number;         // 0 = not started
+  time: string | null;    // clock, e.g. "5:32"
   postseason: boolean;
   home_team: Team;
   visitor_team: Team;
@@ -44,40 +39,23 @@ export type Game = {
 export type SeasonAverage = {
   games_played: number;
   season: number;
-  min: string;
-  pts: number;
-  reb: number;
-  ast: number;
+  pts: number;            // PPG
+  reb: number;            // RPG
+  ast: number;            // APG
   stl: number;
   blk: number;
   turnover: number;
-  fg_pct: number;
-  fg3_pct: number;
-  ft_pct: number;
-  fg_made: number;
+  fg_pct: number;         // 0..1
+  fg3_pct: number;        // 0..1
+  fg_made: number;        // per game
   fg_attempted: number;
   fg3_made: number;
   fg3_attempted: number;
-  ft_made: number;
-  ft_attempted: number;
   oreb: number;
   dreb: number;
-  pf: number;
 };
 
-export type PlayerGameStat = {
-  id: number;
-  min: string;
-  pts: number;
-  reb: number;
-  ast: number;
-  stl: number;
-  blk: number;
-  game: Game;
-  player: Pick<Player, "id" | "first_name" | "last_name">;
-};
-
-// Envelope used by our own API routes (NOT balldontlie's envelope)
+// Envelope used by our own API routes
 export type ApiResponse<T> =
   | { ok: true; data: T }
   | { ok: false; error: string; data: T | null };

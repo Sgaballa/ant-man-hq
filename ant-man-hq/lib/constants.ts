@@ -1,6 +1,8 @@
-export const TIMBERWOLVES_TEAM_ID = 17;
-export const ANTHONY_EDWARDS_PLAYER_ID = 237;
-export const CURRENT_SEASON = 2025; // season starting in fall 2025; bump annually
+export const TIMBERWOLVES_TEAM_ID = "16";      // ESPN team id
+export const TIMBERWOLVES_TEAM_ABBR = "MIN";
+export const TIMBERWOLVES_TEAM_SLUG = "min";   // for ESPN URL paths, always lowercase
+export const ANTHONY_EDWARDS_ATHLETE_ID = "4594268";
+export const CURRENT_SEASON = 2026;            // ESPN's "year" for the 2025-26 season
 
 export const WOLVES_PALETTE = {
   navy: "#0C2340",
