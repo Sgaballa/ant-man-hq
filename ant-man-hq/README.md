@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ant-Man HQ
 
-## Getting Started
+A personalized fan site + live stats dashboard for Anthony Edwards and the Minnesota Timberwolves. Built for an 11-year-old Wolves fan.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 (App Router) + TypeScript + Tailwind CSS v4
+- Framer Motion for card flips, canvas-confetti for the first-flip burst
+- ESPN's public site APIs (no auth) for bio, season averages, schedule, and live scoreboard
+- Vitest + Testing Library for unit tests
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open <http://localhost:3000>.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+No environment variables required.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Test
 
-## Learn More
+```bash
+npm test
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy to Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Create an empty GitHub repo (e.g. `ant-man-hq`) — no README, no license.
+2. Push this repo's `main` branch to it:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    ```bash
+    git remote add origin https://github.com/<your-user>/ant-man-hq.git
+    git push -u origin main
+    ```
 
-## Deploy on Vercel
+3. Open <https://vercel.com/new> and import the repo.
+4. **Set the Root Directory to `ant-man-hq/`** (the Next.js project lives in a subdirectory).
+5. Framework preset: Next.js (auto-detected).
+6. No environment variables needed.
+7. Click **Deploy**.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Vercel will hand you a `*.vercel.app` URL — share with the fan.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Update highlight videos
+
+The three YouTube IDs live in `lib/constants.ts` under `CURATED_HIGHLIGHTS`. Replace them with real video IDs from YouTube (the 11-character string after `v=` in the URL) and push; Vercel redeploys automatically.
+
+## Architecture notes
+
+- `app/page.tsx` calls the route handlers' `GET` functions directly (in-process) to avoid an HTTP round-trip back to the same server.
+- `lib/espn.ts` is a small typed `fetch` wrapper that supports `next: { revalidate: N }` for Next.js's ISR cache.
+- `lib/transformers/` contains pure mapping functions from ESPN's nested responses to the display shape in `lib/types.ts`. The routes import these.
