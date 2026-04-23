@@ -107,8 +107,34 @@ describe("GET /api/games", () => {
     expect(body.data.liveToday?.time).toBe("5:32");
   });
 
+  it("handles ESPN's object-form score { value, displayValue }", async () => {
+    const ev = scheduleEvent({ id: "99", date: "2026-04-20", datetimeUtc: "2026-04-21T01:00Z", status: "Final", completed: true, period: 4, homeAbbr: "MIN", homeScore: 0, visitorAbbr: "DEN", visitorScore: 0 });
+    // Overwrite scores with ESPN's real shape
+    ev.competitions[0].competitors[0].score = { value: 116, displayValue: "116" } as unknown as string;
+    ev.competitions[0].competitors[1].score = { value: 105, displayValue: "105" } as unknown as string;
+
+    const schedule = { team: { id: "16", abbreviation: "MIN" }, events: [ev] };
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => {
+        if (url.includes("/teams/min/schedule")) {
+          return new Response(JSON.stringify(schedule), { status: 200 });
+        }
+        return new Response(JSON.stringify({ events: [] }), { status: 200 });
+      })
+    );
+
+    const res = await GET();
+    const body = await res.json();
+
+    expect(body.ok).toBe(true);
+    expect(body.data.recent[0].home_team_score).toBe(116);
+    expect(body.data.recent[0].visitor_team_score).toBe(105);
+  });
+
   it("returns ok:false when upstream fails", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response("bad", { status: 500 })));
+    vi.stubGlobal("fetch", vi.fn(async (_url: string) => new Response("bad", { status: 500 })));
 
     const res = await GET();
     const body = await res.json();

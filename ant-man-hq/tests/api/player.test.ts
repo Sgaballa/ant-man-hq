@@ -24,34 +24,44 @@ const athletePayload = {
   },
 };
 
+// ESPN's real stats shape: averages category has parallel arrays of
+// `names` (field identifiers) and one `stats` row per season.
 const statsPayload = {
   categories: [
     {
       name: "averages",
-      stats: [
-        { name: "gamesPlayed", value: 65 },
-        { name: "avgMinutes", value: 36.1 },
-        { name: "avgPoints", value: 27.1 },
-        { name: "avgRebounds", value: 5.4 },
-        { name: "avgOffensiveRebounds", value: 0.8 },
-        { name: "avgDefensiveRebounds", value: 4.6 },
-        { name: "avgAssists", value: 4.2 },
-        { name: "avgSteals", value: 1.3 },
-        { name: "avgBlocks", value: 0.6 },
-        { name: "avgTurnovers", value: 3.2 },
-        { name: "fieldGoalPct", value: 46.1 },
-        { name: "avgFieldGoalsMade", value: 9.7 },
-        { name: "avgFieldGoalsAttempted", value: 21.1 },
-        { name: "threePointPct", value: 37.2 },
-        { name: "avg3PointFieldGoalsMade", value: 3.1 },
-        { name: "avg3PointFieldGoalsAttempted", value: 8.3 },
+      names: [
+        "gamesPlayed",
+        "gamesStarted",
+        "avgMinutes",
+        "avgFieldGoalsMade-avgFieldGoalsAttempted",
+        "fieldGoalPct",
+        "avgThreePointFieldGoalsMade-avgThreePointFieldGoalsAttempted",
+        "threePointFieldGoalPct",
+        "avgFreeThrowsMade-avgFreeThrowsAttempted",
+        "freeThrowPct",
+        "avgOffensiveRebounds",
+        "avgDefensiveRebounds",
+        "avgRebounds",
+        "avgAssists",
+        "avgBlocks",
+        "avgSteals",
+        "avgFouls",
+        "avgTurnovers",
+        "avgPoints",
       ],
-    },
-  ],
-  splitCategories: [
-    {
-      name: "season",
-      splits: [{ displayName: "2025-26", season: 2026 }],
+      statistics: [
+        {
+          teamId: "16",
+          season: { year: 2024, displayName: "2023-24" },
+          stats: ["79", "79", "35.1", "9.3-20.7", "45.1", "2.9-7.8", "35.7", "4.9-5.9", "83.6", "0.7", "4.7", "5.4", "5.1", "0.5", "1.3", "2.1", "3.1", "25.9"],
+        },
+        {
+          teamId: "16",
+          season: { year: 2026, displayName: "2025-26" },
+          stats: ["65", "65", "36.1", "9.7-21.1", "46.1", "3.1-8.3", "37.2", "5.2-6.2", "84.0", "0.8", "4.6", "5.4", "4.2", "0.6", "1.3", "2.0", "3.2", "27.1"],
+        },
+      ],
     },
   ],
 };
@@ -61,7 +71,7 @@ describe("GET /api/player", () => {
     vi.restoreAllMocks();
   });
 
-  it("returns normalized player bio + season averages on success", async () => {
+  it("returns normalized player bio + most-recent season averages on success", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string) => {
@@ -85,15 +95,23 @@ describe("GET /api/player", () => {
     expect(body.data.player.jersey_number).toBe("5");
     expect(body.data.player.team.abbreviation).toBe("MIN");
     expect(body.data.player.team.logo).toContain("min.png");
+
+    // Picks 2026 (most-recent), not 2024
+    expect(body.data.seasonAverages.season).toBe(2026);
+    expect(body.data.seasonAverages.games_played).toBe(65);
     expect(body.data.seasonAverages.pts).toBe(27.1);
     expect(body.data.seasonAverages.reb).toBe(5.4);
+    expect(body.data.seasonAverages.ast).toBe(4.2);
     expect(body.data.seasonAverages.fg_pct).toBeCloseTo(0.461, 3);
     expect(body.data.seasonAverages.fg3_pct).toBeCloseTo(0.372, 3);
-    expect(body.data.seasonAverages.games_played).toBe(65);
+    expect(body.data.seasonAverages.fg_made).toBe(9.7);
+    expect(body.data.seasonAverages.fg_attempted).toBe(21.1);
+    expect(body.data.seasonAverages.fg3_made).toBe(3.1);
+    expect(body.data.seasonAverages.fg3_attempted).toBe(8.3);
   });
 
   it("returns ok:false when upstream fails", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response("bad", { status: 500 })));
+    vi.stubGlobal("fetch", vi.fn(async (_url: string) => new Response("bad", { status: 500 })));
 
     const res = await GET();
     const body = await res.json();

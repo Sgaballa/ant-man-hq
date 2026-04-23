@@ -22,17 +22,23 @@ type EspnAthleteResponse = {
   };
 };
 
+type EspnStatsSeasonRow = {
+  teamId?: string;
+  teamSlug?: string;
+  season?: { year?: number; displayName?: string };
+  stats?: string[];
+};
+
 type EspnStatsCategory = {
   name?: string;
-  stats?: Array<{ name?: string; value?: number }>;
+  names?: string[];
+  labels?: string[];
+  totals?: string[];
+  statistics?: EspnStatsSeasonRow[];
 };
 
 type EspnStatsResponse = {
   categories?: EspnStatsCategory[];
-  splitCategories?: Array<{
-    name?: string;
-    splits?: Array<{ season?: number; displayName?: string }>;
-  }>;
 };
 
 export function transformAthlete(payload: EspnAthleteResponse): Player | null {
@@ -62,34 +68,57 @@ export function transformAthlete(payload: EspnAthleteResponse): Player | null {
   };
 }
 
-function pickStat(stats: Array<{ name?: string; value?: number }> | undefined, name: string): number {
-  return stats?.find((s) => s.name === name)?.value ?? 0;
+function parseNum(v: string | undefined): number {
+  if (!v) return 0;
+  const n = parseFloat(v);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function parseSplit(v: string | undefined): [number, number] {
+  if (!v) return [0, 0];
+  const parts = v.split("-");
+  return [parseNum(parts[0]), parseNum(parts[1])];
 }
 
 export function transformSeasonAverages(payload: EspnStatsResponse): SeasonAverage | null {
   const averages = payload.categories?.find((c) => c.name === "averages");
-  if (!averages?.stats) return null;
-  const s = averages.stats;
+  if (!averages?.names || !averages.statistics?.length) return null;
 
-  const season =
-    payload.splitCategories?.find((c) => c.name === "season")?.splits?.[0]?.season ?? 0;
+  const mostRecent = [...averages.statistics]
+    .filter((s) => s.season?.year && s.stats)
+    .sort((a, b) => (b.season?.year ?? 0) - (a.season?.year ?? 0))[0];
+  if (!mostRecent?.stats) return null;
+
+  const names = averages.names;
+  const stats = mostRecent.stats;
+  const num = (name: string) => {
+    const i = names.indexOf(name);
+    return i < 0 ? 0 : parseNum(stats[i]);
+  };
+  const split = (name: string) => {
+    const i = names.indexOf(name);
+    return i < 0 ? ([0, 0] as [number, number]) : parseSplit(stats[i]);
+  };
+
+  const [fgMade, fgAtt] = split("avgFieldGoalsMade-avgFieldGoalsAttempted");
+  const [fg3Made, fg3Att] = split("avgThreePointFieldGoalsMade-avgThreePointFieldGoalsAttempted");
 
   return {
-    games_played: pickStat(s, "gamesPlayed"),
-    season,
-    pts: pickStat(s, "avgPoints"),
-    reb: pickStat(s, "avgRebounds"),
-    ast: pickStat(s, "avgAssists"),
-    stl: pickStat(s, "avgSteals"),
-    blk: pickStat(s, "avgBlocks"),
-    turnover: pickStat(s, "avgTurnovers"),
-    fg_pct: pickStat(s, "fieldGoalPct") / 100,
-    fg3_pct: pickStat(s, "threePointPct") / 100,
-    fg_made: pickStat(s, "avgFieldGoalsMade"),
-    fg_attempted: pickStat(s, "avgFieldGoalsAttempted"),
-    fg3_made: pickStat(s, "avg3PointFieldGoalsMade"),
-    fg3_attempted: pickStat(s, "avg3PointFieldGoalsAttempted"),
-    oreb: pickStat(s, "avgOffensiveRebounds"),
-    dreb: pickStat(s, "avgDefensiveRebounds"),
+    games_played: num("gamesPlayed"),
+    season: mostRecent.season?.year ?? 0,
+    pts: num("avgPoints"),
+    reb: num("avgRebounds"),
+    ast: num("avgAssists"),
+    stl: num("avgSteals"),
+    blk: num("avgBlocks"),
+    turnover: num("avgTurnovers"),
+    fg_pct: num("fieldGoalPct") / 100,
+    fg3_pct: num("threePointFieldGoalPct") / 100,
+    fg_made: fgMade,
+    fg_attempted: fgAtt,
+    fg3_made: fg3Made,
+    fg3_attempted: fg3Att,
+    oreb: num("avgOffensiveRebounds"),
+    dreb: num("avgDefensiveRebounds"),
   };
 }

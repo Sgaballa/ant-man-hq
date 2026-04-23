@@ -1,8 +1,14 @@
 import type { Game, Team } from "@/lib/types";
 
+type EspnScore =
+  | number
+  | string
+  | { value?: number; displayValue?: string }
+  | undefined;
+
 type EspnCompetitor = {
   homeAway?: string;
-  score?: string;
+  score?: EspnScore;
   team?: {
     id?: string;
     abbreviation?: string;
@@ -48,6 +54,17 @@ function teamFrom(c: EspnCompetitor | undefined): Team {
   };
 }
 
+function scoreFrom(c: EspnCompetitor | undefined): number {
+  const s = c?.score;
+  if (s === undefined || s === null) return 0;
+  if (typeof s === "number") return s;
+  if (typeof s === "string") {
+    const n = Number(s);
+    return Number.isFinite(n) ? n : 0;
+  }
+  return typeof s.value === "number" ? s.value : 0;
+}
+
 export function transformEvent(ev: EspnEvent): Game | null {
   const comp = ev.competitions?.[0];
   if (!comp || !ev.id) return null;
@@ -69,7 +86,7 @@ export function transformEvent(ev: EspnEvent): Game | null {
     postseason: ev.seasonType?.type === 3,
     home_team: teamFrom(home),
     visitor_team: teamFrom(visitor),
-    home_team_score: Number(home.score ?? 0),
-    visitor_team_score: Number(visitor.score ?? 0),
+    home_team_score: scoreFrom(home),
+    visitor_team_score: scoreFrom(visitor),
   };
 }
