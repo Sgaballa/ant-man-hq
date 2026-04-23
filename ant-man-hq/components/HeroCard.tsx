@@ -52,12 +52,13 @@ export function HeroCard({ player, seasonAverages, onFirstFlip }: Props) {
           className="absolute inset-0 rounded-2xl neon-border overflow-hidden bg-gradient-to-b from-[color:var(--color-wolves-lake)] to-[color:var(--color-wolves-navy)]"
           style={{ backfaceVisibility: "hidden" }}
         >
-          {/* Player photo with transparent background. No blend mode, no overlay tint. */}
+          {/* Full-bleed action photo. No blend mode, no tint overlay. Text uses
+              drop-shadow for legibility over the photo. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/ant-hero.png"
             alt="Anthony Edwards"
-            className="absolute inset-0 w-full h-full object-contain object-bottom pointer-events-none"
+            className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
           />
 
           {/* Foreground content — text uses shadow for legibility over any part of the photo */}
